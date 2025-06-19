@@ -1489,7 +1489,7 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/reference-data/disease/publish?version=MINOR&name=PierianHemeOntology",
+											"raw": "{{baseUrl}}/reference-data/disease/publish?version=MINOR&name=PierianHemeOntolog",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -1506,7 +1506,7 @@
 												},
 												{
 													"key": "name",
-													"value": "PierianHemeOntology",
+													"value": "PierianHemeOntolog",
 													"description": "This is requied to get the heme ontology versions  or other. If not provided it will return the by default somatic ontology version data"
 												}
 											]
