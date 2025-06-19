@@ -2546,7 +2546,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "f94763e0-6c5f-4e8c-8e85-8105a1fd17e0",
+				"id": "764ae6d5-e7ce-4a5f-b2b6-3f9ca0d84154",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
@@ -2557,7 +2557,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "b973fb81-079e-4d08-9e37-f032f4ad23b4",
+				"id": "dd1ab55d-4e29-4301-872d-b47ce6a8eb3d",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
@@ -2578,17 +2578,17 @@
 		},
 		{
 			"key": "firstId",
-			"value": "",
+			"value": "<id>",
 			"type": "string"
 		},
 		{
 			"key": "refdataSetName",
-			"value": "",
+			"value": "<hemeORsolid>",
 			"type": "string"
 		},
 		{
 			"key": "accessToken",
-			"value": ""
+			"value": "<accessToken>"
 		}
 	]
 }
