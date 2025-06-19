@@ -2492,10 +2492,9 @@
 					"script": {
 						"id": "00b2a770-cd2f-49cc-be17-ea8c23a1cc4a",
 						"exec": [
-							"var jsonData = pm.response.json();\r",
-							"pm.environment.set(\"accessToken\", jsonData.accessToken);\r",
-							"// Set the accessToken as a collection variable to pass it to other requests\r",
-							"pm.collectionVariables.set(\"accessToken\", pm.response.json().accessToken);\r",
+							"// Store accessToken from the response to an environment variable for use in other requests\r",
+							"const response = pm.response.json();\r",
+							"pm.environment.set(\"accessToken\", response.accessToken);\r",
 							""
 						],
 						"type": "text/javascript",
@@ -2505,8 +2504,12 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"packages": {},
-						"type": "text/javascript"
+						"id": "392b8d83-0b8b-457f-b9ef-11844b11eaed",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
