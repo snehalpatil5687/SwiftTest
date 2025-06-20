@@ -1468,10 +1468,11 @@
 													"    pm.response.to.have.jsonBody('releaseNote', pm.environment.get('releaseNote'));\r",
 													"});\r",
 													"\r",
-													"//add test for name to match with refdataSetName\r",
-													"pm.test('Name matches refDataSetName', function () {\r",
+													"//add test for name to match with parameter name\r",
+													"pm.test('Name matches parameter name', function () {\r",
 													"    pm.response.to.have.jsonBody('name', pm.environment.get('refdataSetName'));\r",
 													"});\r",
+													"\r",
 													"\r",
 													"\r",
 													"\r",
@@ -1533,7 +1534,7 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/reference-data/disease/publish?version=MINOR&name=PierianHemeOntology",
+											"raw": "{{baseUrl}}/reference-data/disease/publish?version=MINOR&name={{refdataSetName}}",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -1550,7 +1551,7 @@
 												},
 												{
 													"key": "name",
-													"value": "PierianHemeOntology",
+													"value": "{{refdataSetName}}",
 													"description": "This is requied to get the heme ontology versions  or other. If not provided it will return the by default somatic ontology version data"
 												}
 											]
