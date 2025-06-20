@@ -2499,11 +2499,13 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "00b2a770-cd2f-49cc-be17-ea8c23a1cc4a",
+						"id": "99a26e3e-1952-4774-bd8b-4da6db620a32",
 						"exec": [
-							"// Store accessToken from the response to an environment variable for use in other requests\r",
-							"const response = pm.response.json();\r",
-							"pm.environment.set(\"accessToken\", response.accessToken);\r",
+							"//Store accessToken from the response to an environment variable for use in other requests\r",
+							"pm.test('Store accessToken in environment variable', function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.environment.set(\"accessToken\", jsonData.accessToken);\r",
+							"});\r",
 							""
 						],
 						"type": "text/javascript",
@@ -2513,7 +2515,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "392b8d83-0b8b-457f-b9ef-11844b11eaed",
+						"id": "1b4f7d13-7e8c-4535-85e7-2daaab5f6a2d",
 						"exec": [
 							""
 						],
