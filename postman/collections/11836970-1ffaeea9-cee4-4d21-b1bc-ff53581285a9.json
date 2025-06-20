@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "11836970-1ffaeea9-cee4-4d21-b1bc-ff53581285a9",
 		"name": "Swift1",
-		"description": "Swift OpenAPI Specification Document\n\nContact Support:  \nEmail: [apiteam@swagger.io](https://mailto:apiteam@swagger.io)",
+		"description": "Swift OpenAPI Specification Document\n\nContact Support:\n Email: apiteam@swagger.io",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -61,7 +61,7 @@
 									],
 									"variable": [
 										{
-											"id": "5797f365-b966-436c-b27a-1ff55830d9ba",
+											"id": "f141099d-aeb3-4bbe-b2e7-6c992b272a0b",
 											"key": "id",
 											"value": "",
 											"description": "(Required) ID"
@@ -1173,34 +1173,50 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "27295ba3-373e-4ffd-aae5-d882ae3c1239",
+												"id": "4638a28a-52a5-4f08-b0c2-a86bec22be87",
 												"exec": [
-													"// Test case for the GET request to retrieve the last published version of Disease\r",
-													"pm.test(\"Status code is 200\", function () {\r",
-													"    pm.response.to.have.status(200);\r",
-													"});\r",
-													"\r",
 													"const response = pm.response.json();\r",
 													"\r",
-													"// Test for the releaseNote field existence and type\r",
-													"for (let i = 0; i < response.length; i++) {\r",
-													"    pm.expect(response[i].releaseNote).to.exist;\r",
-													"    pm.expect(response[i].releaseNote).to.be.a('string');\r",
-													"}\r",
-													"\r",
-													"// Test for the releaseNote field value\r",
-													"pm.test(\"Release note contains 'Publish disease'\", function () {\r",
-													"    pm.expect(response.find(item => item.releaseNote === 'Publish disease')).to.exist;\r",
+													"   // \"version\": \"7.10.0\", \"version\": \"7.9.0\", add test to check if versions are in descending order\r",
+													"   //convert version from  \"version\": \"7.10.0\", to 7100 and store\r",
+													"pm.test(\"Check if versions are in descending order\", function () {\r",
+													"    const versions = response.map(item => parseInt(item.version.replace(/\\./g, '')));\r",
+													"    console.log(versions);\r",
+													"    const sortedVersions = [...versions].sort((a, b) => b - a);\r",
+													"    console.log(sortedVersions);\r",
+													"    pm.expect(versions).to.deep.equal(sortedVersions);\r",
 													"});\r",
 													"\r",
-													"// Test for version in descending order\r",
-													"// Extracting versions from the response\r",
-													"// Test to verify if the first version is the biggest in all other versions\r",
-													"pm.test(\"First version is the biggest in all other versions\", function () {\r",
-													"    const versions = response.map(item => item.version);\r",
-													"    versions.sort((a, b) => parseFloat(b) - parseFloat(a));\r",
-													"    pm.expect(versions[0]).to.equal(response[0].version);\r",
-													"});\r",
+													"\r",
+													"    // Validate response against schema\r",
+													"    const Ajv = require(\"ajv\");\r",
+													"    const ajv = new Ajv();\r",
+													"    const schema = {\r",
+													"        \"type\": \"array\",\r",
+													"        \"items\": {\r",
+													"            \"type\": \"object\",\r",
+													"            \"properties\": {\r",
+													"                \"_id\": { \"type\": \"string\" },\r",
+													"                \"version\": { \"type\": \"string\" },\r",
+													"                \"releaseNote\": { \"type\": \"string\" },\r",
+													"                \"createdBy\": {\r",
+													"                    \"type\": \"object\",\r",
+													"                    \"properties\": {\r",
+													"                        \"userId\": { \"type\": \"string\" },\r",
+													"                        \"userName\": { \"type\": \"string\" },\r",
+													"                        \"date\": { \"type\": \"string\" }\r",
+													"                    },\r",
+													"                    \"required\": [\"userId\", \"userName\", \"date\"]\r",
+													"                }\r",
+													"            },\r",
+													"            \"required\": [\"_id\", \"version\", \"releaseNote\", \"createdBy\"]\r",
+													"        }\r",
+													"    };\r",
+													"    const validate = ajv.compile(schema);\r",
+													"    const valid = validate(response);\r",
+													"    pm.test(\"Response is valid against schema\", function () {\r",
+													"        pm.expect(valid).to.be.true;\r",
+													"    });\r",
 													""
 												],
 												"type": "text/javascript",
@@ -1432,20 +1448,39 @@
 											"script": {
 												"id": "24f519cd-0d6a-4080-86c9-f276d5fe39c0",
 												"exec": [
-													"const response = pm.response.json();\r",
-													"pm.test('Verify active field is true in the response', () => {\r",
-													"    pm.expect(response.active).to.eql(true);\r",
+													"//add test for active=true\r",
+													"pm.test('Active status is true', function () {\r",
+													"    pm.response.to.have.jsonBody('active', true);\r",
 													"});\r",
-													"// Test for the name field in the response\r",
-													"pm.test('Verify the name field in the response', () => {\r",
-													"    const response = pm.response.json();\r",
-													"    pm.expect(response.name).to.eql('PierianHemeOntology');\r",
+													"//add test for releaseNote\r",
+													"pm.test('Release note is correct', function () {\r",
+													"    pm.response.to.have.jsonBody('releaseNote', pm.environment.get('releaseNote'));\r",
 													"});\r",
-													"// Test for the releaseNote field in the response\r",
-													"pm.test('Verify the releaseNote field in the response', () => {\r",
-													"    const response = pm.response.json();\r",
-													"    pm.expect(response.releaseNote).to.eql('Publish disease automation');\r",
-													"});"
+													"\r",
+													"//add test for name to match with request parameter 'name'\r",
+													"pm.test('Name matches request parameter', function () {\r",
+													"    const requestName = pm.request.url.query.get('name');\r",
+													"    pm.response.to.have.jsonBody('name', requestName);\r",
+													"});\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "334fd6fb-7de6-44a3-b714-1d90ecb7b7fc",
+												"exec": [
+													"// Save release note from request body to an environment variable\r",
+													"const requestBody = JSON.parse(pm.request.body.raw);\r",
+													"pm.environment.set(\"releaseNote\", requestBody.releaseNote);\r",
+													""
 												],
 												"type": "text/javascript",
 												"packages": {}
@@ -1489,7 +1524,7 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/reference-data/disease/publish?version=MINOR&name=PierianHemeOntolog",
+											"raw": "{{baseUrl}}/reference-data/disease/publish?version=MINOR&name={{refdataSetName}}",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -1506,7 +1541,7 @@
 												},
 												{
 													"key": "name",
-													"value": "PierianHemeOntolog",
+													"value": "{{refdataSetName}}",
 													"description": "This is requied to get the heme ontology versions  or other. If not provided it will return the by default somatic ontology version data"
 												}
 											]
@@ -2138,21 +2173,23 @@
 							"script": {
 								"id": "f1d1bba0-95f9-4ef3-9231-41ef4203e41b",
 								"exec": [
-									"// Generate a random string of 5 alphanumeric characters\r",
-									"let randomString = '';\r",
-									"for (let i = 0; i < 5; i++) {\r",
-									"    randomString += pm.variables.replaceIn('{{$randomAlphaNumeric}}');\r",
+									"//generate random string of length 5\r",
+									"function generateRandomString(length) {\r",
+									"    var result = '';\r",
+									"    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\r",
+									"    var charactersLength = characters.length;\r",
+									"    for (var i = 0; i < length; i++) {\r",
+									"        result += characters.charAt(Math.floor(Math.random() * charactersLength));\r",
+									"    }\r",
+									"    return result;\r",
 									"}\r",
 									"\r",
-									"// Update the code field in the request body with the dynamic random string\r",
-									"const requestBody = JSON.parse(pm.request.body.raw);\r",
-									"// Update the code and label fields in the request body with the dynamic random string\r",
-									"requestBody.code = '414825006_ ' + randomString;\r",
-									"requestBody.label = 'Automation heme disease ' + randomString;\r",
-									"pm.request.body.raw = JSON.stringify(requestBody);\r",
-									"\r",
-									"// Print the updated request body for debugging\r",
+									"//update <randomString> in the request body for label and code field with above random string\r",
+									"var randomString = generateRandomString(5);\r",
+									"pm.request.body.raw = pm.request.body.raw.replace(/<randomString>/g, randomString);\r",
+									"//log request body\r",
 									"console.log(pm.request.body.raw);\r",
+									"\r",
 									"\r",
 									""
 								],
@@ -2203,7 +2240,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"refType\": \"disease\",\n  \"path\": \"\",\n  \"code\": \"disease1\",\n  \"label\": \"disease1\",\n  \"status\": \"DRAFT\",\n  \"active\": true,\n  \"refdataSetName\": \"PierianHemeOntology\",\n  \"attributes\": {\n    \"preferredName\": \"disease1\",\n    \"synonyms\": [\n      \"disease1\"\n    ],\n    \"SNOMEDCTPreferredName\": \"disease1\",\n    \"SNOMEDCTInternationId\": \"disease1\",\n    \"display\": \"Yes\"\n  }\n}",
+							"raw": "{\n  \"refType\": \"disease\",\n  \"path\": \"\",\n  \"code\": \"414825006_<randomString>\",\n  \"label\": \"Automation disease <randomString>\",\n  \"status\": \"DRAFT\",\n  \"active\": true,\n  \"refdataSetName\": \"PierianHemeOntology\",\n  \"attributes\": {\n    \"preferredName\": \"disease1\",\n    \"synonyms\": [\n      \"disease1\"\n    ],\n    \"SNOMEDCTPreferredName\": \"disease1\",\n    \"SNOMEDCTInternationId\": \"disease1\",\n    \"display\": \"Yes\"\n  }\n}",
 							"options": {
 								"raw": {
 									"headerFamily": "json",
@@ -2465,10 +2502,9 @@
 					"script": {
 						"id": "00b2a770-cd2f-49cc-be17-ea8c23a1cc4a",
 						"exec": [
-							"var jsonData = pm.response.json();\r",
-							"pm.environment.set(\"accessToken\", jsonData.accessToken);\r",
-							"// Set the accessToken as a collection variable to pass it to other requests\r",
-							"pm.collectionVariables.set(\"accessToken\", pm.response.json().accessToken);\r",
+							"// Store accessToken from the response to an environment variable for use in other requests\r",
+							"const response = pm.response.json();\r",
+							"pm.environment.set(\"accessToken\", response.accessToken);\r",
 							""
 						],
 						"type": "text/javascript",
@@ -2478,8 +2514,12 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"packages": {},
-						"type": "text/javascript"
+						"id": "392b8d83-0b8b-457f-b9ef-11844b11eaed",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -2519,7 +2559,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "f94763e0-6c5f-4e8c-8e85-8105a1fd17e0",
+				"id": "7be0e0db-96c3-4b86-8928-05a030bd1b2e",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
@@ -2530,7 +2570,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "b973fb81-079e-4d08-9e37-f032f4ad23b4",
+				"id": "6a5ed5c0-bd0d-4e64-84a7-5a338b174c2d",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
@@ -2551,17 +2591,17 @@
 		},
 		{
 			"key": "firstId",
-			"value": "",
+			"value": "<id>",
 			"type": "string"
 		},
 		{
 			"key": "refdataSetName",
-			"value": "",
+			"value": "<hemeORsolid>",
 			"type": "string"
 		},
 		{
 			"key": "accessToken",
-			"value": ""
+			"value": "<accessToken>"
 		}
 	]
 }
