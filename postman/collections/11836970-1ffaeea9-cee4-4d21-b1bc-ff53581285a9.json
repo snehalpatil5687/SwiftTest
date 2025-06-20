@@ -1459,20 +1459,37 @@
 											"script": {
 												"id": "24f519cd-0d6a-4080-86c9-f276d5fe39c0",
 												"exec": [
-													"const response = pm.response.json();\r",
-													"pm.test('Verify active field is true in the response', () => {\r",
-													"    pm.expect(response.active).to.eql(true);\r",
+													"//add test for active=true\r",
+													"pm.test('Active status is true', function () {\r",
+													"    pm.response.to.have.jsonBody('active', true);\r",
 													"});\r",
-													"// Test for the name field in the response\r",
-													"pm.test('Verify the name field in the response', () => {\r",
-													"    const response = pm.response.json();\r",
-													"    pm.expect(response.name).to.eql('PierianHemeOntology');\r",
+													"//add test for releaseNote\r",
+													"pm.test('Release note is correct', function () {\r",
+													"    pm.response.to.have.jsonBody('releaseNote', pm.environment.get('releaseNote'));\r",
 													"});\r",
-													"// Test for the releaseNote field in the response\r",
-													"pm.test('Verify the releaseNote field in the response', () => {\r",
-													"    const response = pm.response.json();\r",
-													"    pm.expect(response.releaseNote).to.eql('Publish disease automation');\r",
-													"});"
+													"\r",
+													"//add test for name to match with refdataSetName\r",
+													"pm.test('Name matches refDataSetName', function () {\r",
+													"    pm.response.to.have.jsonBody('name', pm.environment.get('refdataSetName'));\r",
+													"});\r",
+													"\r",
+													"\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "334fd6fb-7de6-44a3-b714-1d90ecb7b7fc",
+												"exec": [
+													"// Save release note from request body to an environment variable\r",
+													"const requestBody = JSON.parse(pm.request.body.raw);\r",
+													"pm.environment.set(\"releaseNote\", requestBody.releaseNote);\r",
+													""
 												],
 												"type": "text/javascript",
 												"packages": {}
